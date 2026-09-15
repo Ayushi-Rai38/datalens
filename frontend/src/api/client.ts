@@ -1,7 +1,7 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from "axios";
 import type { TokenPair } from "../types";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
 
 export const apiClient = axios.create({ baseURL: BASE_URL });
 
@@ -70,8 +70,16 @@ apiClient.interceptors.response.use(
 
 export function getApiErrorMessage(error: unknown): string {
   if (axios.isAxiosError(error)) {
-    const data = error.response?.data as { message?: string } | undefined;
-    return data?.message || error.message || "Something went wrong.";
+    if (!error.response) {
+      return `Network Error: Unable to connect to backend at ${BASE_URL}. Please ensure backend is running at http://127.0.0.1:8000.`;
+    }
+    const data = error.response.data as { message?: string; detail?: string | Array<{ msg: string }> } | undefined;
+    if (data?.message) return data.message;
+    if (typeof data?.detail === "string") return data.detail;
+    if (Array.isArray(data?.detail) && data.detail.length > 0) {
+      return data.detail.map((d) => d.msg).join(", ");
+    }
+    return error.message || "Something went wrong.";
   }
   return "Something went wrong.";
 }
