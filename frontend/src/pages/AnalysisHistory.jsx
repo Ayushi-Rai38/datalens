@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { analysisApi } from "../api/endpoints";
 import { getApiErrorMessage } from "../api/client";
-import type { QualityReportSummary } from "../types";
 import { ErrorState, LoadingState, EmptyState } from "../components/StateViews";
 import { formatDate, scoreColor } from "../utils/format";
 
@@ -11,12 +10,12 @@ export default function AnalysisHistory() {
   const datasetId = Number(id);
   const navigate = useNavigate();
 
-  const [items, setItems] = useState<QualityReportSummary[]>([]);
+  const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [selected, setSelected] = useState<number[]>([]);
+  const [error, setError] = useState(null);
+  const [selected, setSelected] = useState([]);
 
   useEffect(() => {
     const load = async () => {
@@ -35,7 +34,7 @@ export default function AnalysisHistory() {
     load();
   }, [datasetId, page]);
 
-  const toggleSelect = (reportId: number) => {
+  const toggleSelect = (reportId) => {
     setSelected((prev) => {
       if (prev.includes(reportId)) return prev.filter((id) => id !== reportId);
       if (prev.length >= 2) return [prev[1], reportId];

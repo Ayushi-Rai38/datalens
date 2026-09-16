@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { analysisApi } from "../api/endpoints";
 import { getApiErrorMessage } from "../api/client";
-import type { ReportComparisonResponse } from "../types";
 import { ErrorState, LoadingState } from "../components/StateViews";
 import { formatDate, scoreColor } from "../utils/format";
 
@@ -11,9 +10,9 @@ export default function ReportComparison() {
   const reportA = Number(searchParams.get("a"));
   const reportB = Number(searchParams.get("b"));
 
-  const [data, setData] = useState<ReportComparisonResponse | null>(null);
+  const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const load = async () => {
@@ -91,7 +90,7 @@ export default function ReportComparison() {
   );
 }
 
-function ReportCard({ title, date, score, isOld }: { title: string; date: string; score: number; isOld: boolean }) {
+function ReportCard({ title, date, score, isOld }) {
   return (
     <div className={`glass-card p-6 relative overflow-hidden flex flex-col items-center border ${isOld ? 'border-zinc-800' : 'border-indigo-500/30'}`}>
       {!isOld && <div className="absolute top-0 right-0 px-3 py-1 bg-indigo-500/20 text-indigo-400 text-xs font-bold rounded-bl-lg">NEWER</div>}
@@ -112,14 +111,6 @@ function IssueList({
   icon,
   bg,
   border
-}: {
-  title: string;
-  issues: { code: string; message: string }[];
-  empty: string;
-  tone: string;
-  icon: React.ReactNode;
-  bg: string;
-  border: string;
 }) {
   return (
     <div className={`glass-card p-6 ${border}`}>

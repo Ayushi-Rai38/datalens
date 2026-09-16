@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { analysisApi, datasetApi } from "../api/endpoints";
 import { getApiErrorMessage } from "../api/client";
-import type { Dataset, DatasetColumn, DatasetPreview } from "../types";
 import { ErrorState, LoadingState } from "../components/StateViews";
 import { formatBytes, formatDate, formatPercent } from "../utils/format";
 
@@ -11,13 +10,13 @@ export default function DatasetDetail() {
   const datasetId = Number(id);
   const navigate = useNavigate();
 
-  const [dataset, setDataset] = useState<Dataset | null>(null);
-  const [columns, setColumns] = useState<DatasetColumn[]>([]);
-  const [preview, setPreview] = useState<DatasetPreview | null>(null);
+  const [dataset, setDataset] = useState(null);
+  const [columns, setColumns] = useState([]);
+  const [preview, setPreview] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analyzeError, setAnalyzeError] = useState<string | null>(null);
+  const [analyzeError, setAnalyzeError] = useState(null);
   const [columnSearch, setColumnSearch] = useState("");
 
   const load = async () => {

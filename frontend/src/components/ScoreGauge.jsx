@@ -1,6 +1,6 @@
 import { scoreRingColor } from "../utils/format";
 
-export default function ScoreGauge({ score, size = 140 }: { score: number; size?: number }) {
+export default function ScoreGauge({ score, size = 140 }) {
   const radius = size / 2 - 10;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference * (1 - score / 100);

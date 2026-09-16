@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { analysisApi } from "../api/endpoints";
 import { getApiErrorMessage } from "../api/client";
-import type { QualityReport } from "../types";
 import { ErrorState, LoadingState } from "../components/StateViews";
 import ScoreGauge from "../components/ScoreGauge";
 import { formatDate, formatNumber, formatPercent } from "../utils/format";
@@ -12,15 +11,15 @@ export default function AnalysisReport() {
   const datasetId = Number(id);
   const navigate = useNavigate();
 
-  const [report, setReport] = useState<QualityReport | null>(null);
+  const [report, setReport] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
   const [isReanalyzing, setIsReanalyzing] = useState(false);
 
   // Interactive Section States
   const [showAllMissing, setShowAllMissing] = useState(false);
-  const [selectedCorrCol, setSelectedCorrCol] = useState<string>("");
-  const [selectedDistCol, setSelectedDistCol] = useState<string>("");
+  const [selectedCorrCol, setSelectedCorrCol] = useState("");
+  const [selectedDistCol, setSelectedDistCol] = useState("");
   const [numSearch, setNumSearch] = useState("");
   const [catSearch, setCatSearch] = useState("");
   const [showFullMatrix, setShowFullMatrix] = useState(false);
@@ -86,7 +85,7 @@ export default function AnalysisReport() {
 
   // Correlation for selected column
   const corrMatrix = report.correlation?.matrix || {};
-  const selectedCorrValues: { column: string; value: number }[] = [];
+  const selectedCorrValues = [];
 
   if (selectedCorrCol && corrMatrix[selectedCorrCol]) {
     Object.entries(corrMatrix[selectedCorrCol]).forEach(([targetCol, val]) => {
@@ -107,7 +106,7 @@ export default function AnalysisReport() {
     .slice(0, 5);
 
   // Dynamic Key Insights Generation (4-8 Insights)
-  const insights: { title: string; desc: string; type: "info" | "warning" | "success" }[] = [];
+  const insights = [];
 
   // Insight 1: Dimensions
   insights.push({
@@ -655,7 +654,7 @@ export default function AnalysisReport() {
   );
 }
 
-function OverviewStat({ label, value, highlight = "text-white" }: { label: string; value: string | number; highlight?: string }) {
+function OverviewStat({ label, value, highlight = "text-white" }) {
   return (
     <div className="glass-card p-4 border border-zinc-800">
       <p className="text-zinc-400 text-[11px] font-medium uppercase tracking-wider mb-1">{label}</p>
@@ -664,7 +663,7 @@ function OverviewStat({ label, value, highlight = "text-white" }: { label: strin
   );
 }
 
-function QuantileCard({ label, value, highlight = "text-zinc-200" }: { label: string; value: string | number; highlight?: string }) {
+function QuantileCard({ label, value, highlight = "text-zinc-200" }) {
   return (
     <div className="bg-zinc-900/60 p-3 rounded-lg border border-zinc-800 text-center">
       <p className="text-[10px] text-zinc-500 uppercase tracking-wider mb-1 font-medium">{label}</p>

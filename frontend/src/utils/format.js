@@ -1,11 +1,11 @@
-export function formatBytes(bytes: number): string {
+export function formatBytes(bytes) {
   if (bytes === 0) return "0 B";
   const units = ["B", "KB", "MB", "GB"];
   const i = Math.floor(Math.log(bytes) / Math.log(1024));
   return `${(bytes / Math.pow(1024, i)).toFixed(1)} ${units[i]}`;
 }
 
-export function formatDate(iso: string): string {
+export function formatDate(iso) {
   return new Date(iso).toLocaleString(undefined, {
     year: "numeric",
     month: "short",
@@ -15,29 +15,29 @@ export function formatDate(iso: string): string {
   });
 }
 
-export function formatPercent(value: number | null | undefined, digits = 1): string {
+export function formatPercent(value, digits = 1) {
   if (value === null || value === undefined) return "-";
   return `${value.toFixed(digits)}%`;
 }
 
-export function formatNumber(value: number | null | undefined, digits = 2): string {
+export function formatNumber(value, digits = 2) {
   if (value === null || value === undefined) return "-";
   return Number.isInteger(value) ? String(value) : value.toFixed(digits);
 }
 
-export function scoreColor(score: number): string {
+export function scoreColor(score) {
   if (score >= 85) return "text-emerald-600";
   if (score >= 60) return "text-amber-600";
   return "text-red-600";
 }
 
-export function scoreRingColor(score: number): string {
+export function scoreRingColor(score) {
   if (score >= 85) return "#059669";
   if (score >= 60) return "#d97706";
   return "#dc2626";
 }
 
-export function severityBadgeClass(severity: string): string {
+export function severityBadgeClass(severity) {
   switch (severity) {
     case "high":
       return "bg-red-100 text-red-700";
@@ -48,7 +48,7 @@ export function severityBadgeClass(severity: string): string {
   }
 }
 
-export function statusBadgeClass(status: string): string {
+export function statusBadgeClass(status) {
   switch (status) {
     case "valid":
     case "analyzed":

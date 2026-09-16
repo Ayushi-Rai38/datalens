@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { getApiErrorMessage } from "../api/client";
@@ -9,10 +9,10 @@ export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
     setIsSubmitting(true);

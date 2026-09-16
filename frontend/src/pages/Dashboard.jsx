@@ -1,24 +1,23 @@
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { datasetApi } from "../api/endpoints";
 import { getApiErrorMessage } from "../api/client";
 import { useAuth } from "../context/AuthContext";
-import type { Dataset } from "../types";
 import { ErrorState, LoadingState, EmptyState } from "../components/StateViews";
 import { formatBytes, formatDate } from "../utils/format";
 
 export default function Dashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef(null);
 
-  const [recentDatasets, setRecentDatasets] = useState<Dataset[]>([]);
-  const [totalCount, setTotalCount] = useState<number>(0);
+  const [recentDatasets, setRecentDatasets] = useState([]);
+  const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState(null);
 
   const loadRecent = async () => {
     setIsLoading(true);
@@ -38,7 +37,7 @@ export default function Dashboard() {
     loadRecent();
   }, []);
 
-  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 

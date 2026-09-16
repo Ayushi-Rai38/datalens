@@ -1,8 +1,7 @@
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { datasetApi } from "../api/endpoints";
 import { getApiErrorMessage } from "../api/client";
-import type { Dataset, DatasetStatus } from "../types";
 import { ErrorState, LoadingState, EmptyState } from "../components/StateViews";
 import { formatBytes, formatDate } from "../utils/format";
 
@@ -10,23 +9,23 @@ const PAGE_SIZE = 10;
 
 export default function Datasets() {
   const navigate = useNavigate();
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef(null);
 
-  const [items, setItems] = useState<Dataset[]>([]);
+  const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [deletingId, setDeletingId] = useState(null);
 
   const load = async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const statusParam = statusFilter !== "all" ? (statusFilter as DatasetStatus) : undefined;
+      const statusParam = statusFilter !== "all" ? statusFilter : undefined;
       const resp = await datasetApi.list({ page, page_size: PAGE_SIZE, search: search || undefined, status: statusParam });
       setItems(resp.data.items);
       setTotalPages(resp.data.total_pages || 1);
@@ -47,7 +46,7 @@ export default function Datasets() {
     load();
   };
 
-  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
     setIsUploading(true);
@@ -62,7 +61,7 @@ export default function Datasets() {
     }
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id) => {
     setDeletingId(id);
     try {
       await datasetApi.remove(id);

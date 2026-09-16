@@ -1,5 +1,4 @@
-import axios, { AxiosError, type InternalAxiosRequestConfig } from "axios";
-import type { TokenPair } from "../types";
+import axios from "axios";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
 
@@ -11,7 +10,7 @@ const REFRESH_TOKEN_KEY = "datalens_refresh_token";
 export const tokenStorage = {
   getAccessToken: () => localStorage.getItem(ACCESS_TOKEN_KEY),
   getRefreshToken: () => localStorage.getItem(REFRESH_TOKEN_KEY),
-  setTokens: (tokens: TokenPair) => {
+  setTokens: (tokens) => {
     localStorage.setItem(ACCESS_TOKEN_KEY, tokens.access_token);
     localStorage.setItem(REFRESH_TOKEN_KEY, tokens.refresh_token);
   },
@@ -21,7 +20,7 @@ export const tokenStorage = {
   },
 };
 
-apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+apiClient.interceptors.request.use((config) => {
   const token = tokenStorage.getAccessToken();
   if (token && config.headers) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -29,13 +28,13 @@ apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   return config;
 });
 
-let refreshInFlight: Promise<string | null> | null = null;
+let refreshInFlight = null;
 
-async function refreshAccessToken(): Promise<string | null> {
+async function refreshAccessToken() {
   const refreshToken = tokenStorage.getRefreshToken();
   if (!refreshToken) return null;
   try {
-    const resp = await axios.post<TokenPair>(`${BASE_URL}/api/v1/auth/refresh`, {
+    const resp = await axios.post(`${BASE_URL}/api/v1/auth/refresh`, {
       refresh_token: refreshToken,
     });
     tokenStorage.setTokens(resp.data);
@@ -48,8 +47,8 @@ async function refreshAccessToken(): Promise<string | null> {
 
 apiClient.interceptors.response.use(
   (response) => response,
-  async (error: AxiosError) => {
-    const originalRequest = error.config as (InternalAxiosRequestConfig & { _retry?: boolean }) | undefined;
+  async (error) => {
+    const originalRequest = error.config;
 
     if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
       originalRequest._retry = true;
@@ -68,12 +67,12 @@ apiClient.interceptors.response.use(
   }
 );
 
-export function getApiErrorMessage(error: unknown): string {
+export function getApiErrorMessage(error) {
   if (axios.isAxiosError(error)) {
     if (!error.response) {
       return `Network Error: Unable to connect to backend at ${BASE_URL}. Please ensure backend is running at http://127.0.0.1:8000.`;
     }
-    const data = error.response.data as { message?: string; detail?: string | Array<{ msg: string }> } | undefined;
+    const data = error.response.data;
     if (data?.message) return data.message;
     if (typeof data?.detail === "string") return data.detail;
     if (Array.isArray(data?.detail) && data.detail.length > 0) {

@@ -1,4 +1,4 @@
-export function LoadingState({ label = "Loading..." }: { label?: string }) {
+export function LoadingState({ label = "Loading..." }) {
   return (
     <div className="flex flex-col items-center justify-center py-20 text-zinc-400 animate-fade-in">
       <div className="relative w-10 h-10 mb-4">
@@ -10,7 +10,7 @@ export function LoadingState({ label = "Loading..." }: { label?: string }) {
   );
 }
 
-export function ErrorState({ message }: { message: string }) {
+export function ErrorState({ message }) {
   return (
     <div className="rounded-xl border border-red-500/20 bg-red-500/10 backdrop-blur-sm text-red-400 px-5 py-4 text-sm flex items-start gap-3 shadow-[0_0_15px_rgba(239,68,68,0.1)]">
       <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -24,7 +24,7 @@ export function ErrorState({ message }: { message: string }) {
   );
 }
 
-export function EmptyState({ title, description }: { title: string; description?: string }) {
+export function EmptyState({ title, description }) {
   return (
     <div className="rounded-xl border border-dashed border-zinc-700 bg-zinc-900/30 backdrop-blur-sm py-16 text-center animate-fade-in">
       <div className="w-16 h-16 rounded-full bg-zinc-800/50 flex items-center justify-center mx-auto mb-4 border border-zinc-700/50">
